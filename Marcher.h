@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "Object.h"
+#include "Collision.h"
 #include "Light.h"
 #include "Scene.h"
 #include "Camera.h"
@@ -21,8 +22,8 @@ class Marcher{
 
 	Scene scene;
 	
-	Vector march(const Ray& ray);
-	//Vector findColor(const Vector& position, const Vector& direction, std::shared_ptr<Object>& pobject);
+	void march(const Ray& ray, Collision& collision);
+	Vector findColor(const Ray& ray);
 
 	public:
 

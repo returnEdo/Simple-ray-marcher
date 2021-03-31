@@ -39,49 +39,115 @@ void Marcher::render(const Camera& camera, std::vector<Vector>& colors){
 
 			Ray ray(camera.getPosition(), d);
 
-			colors.push_back(clamp(255.0f * march(ray), Vector(.0f), Vector(255.0f)));
+			colors.push_back(clamp(255.0f * findColor(ray), Vector(.0f), Vector(255.0f)));
 		}
 	}
 }
 
 
 
+void Marcher::march(const Ray& ray, Collision& collision){
+	/* checks collisions for the ray */
+	
+	Vector position = ray.getOrigin();
+	
+	for (int i = 0; i < Constants::ITER_MAX; i++){
+		
+		float t = std::numeric_limits<float>::max();
 
-Vector Marcher::march(const Ray& ray){
+		std::shared_ptr<Object> closest;
+	
+		/* find the closest object and shorter distance */
+		for (auto pobject: scene.objects){
+
+			float tt = pobject -> sdf(position);
+			
+			if (tt < t){
+			
+				closest = pobject;
+				t = tt;
+			}
+		}
+		
+		/* record the distance for ambient occlusion / volumetric effects */
+		collision.queue.enque(t);
+
+		if (t >= Constants::SUPREMUM_TOLL){
+			
+			collision.hasCollided = false;
+
+			return;
+		}
+		else if (t <= Constants::INFIMUM_TOLL){
+			
+			collision.position 		= position;
+			collision.collidedObject 	= closest;
+			collision.hasCollided		= true;
+
+			return;
+		}
+		
+		/* marching step */
+		position += t * ray.getDirection();
+	}
+
+	collision.hasCollided = false;
+	
+	return;
+}
+
+
+Vector Marcher::findColor(const Ray& ray){
 	/* marches a ray and find the corresponding color */
 	/* TODO: accumulation for amb occlu */
 
-	Vector position = ray.getOrigin();		// current position
+//	Vector position = ray.getOrigin();		// current position
+//	
+//	std::shared_ptr<Object> closest;
+//
+//	for (int i = 0; i < Constants::ITER_MAX; i++){	
+//
+//		/* find the closest Object */
+//		float t = std::numeric_limits<float>::max();
+//		for (auto pobject: scene.objects){
+//
+//			if (pobject -> sdf(position) < t){
+//				
+//				closest = pobject;
+//				t = pobject -> sdf(position);
+//			}
+//
+//		}
+//
+//		/* the ray is getting too far */
+//		if (t > Constants::SUPREMUM_TOLL)	{ return Constants::BACKGROUND_COLOR; }
+//
+//		/* the ray is close enough to a surface */
+//		else if (t < Constants::INFIMUM_TOLL)	{ return Vector(.2f, .7f, .2f); }
+//		/* march along the ray */
+//
+//		position += t * ray.getDirection();
+//
+//	}
+//	/* may happen when the ray is parallel to a surface */
+//
+//	return Constants::BACKGROUND_COLOR;
+
 	
-	std::shared_ptr<Object> closest;
+	Collision collision;
+	
+	march(ray, collision);
 
-	for (int i = 0; i < Constants::ITER_MAX; i++){	
+	if (collision.hasCollided){
+		
+		return Vector(.2, .7, .2);
 
-		/* find the closest Object */
-		float t = std::numeric_limits<float>::max();
-		for (auto pobject: scene.objects){
-
-			if (pobject -> sdf(position) < t){
-				
-				closest = pobject;
-				t = pobject -> sdf(position);
-			}
-
-		}
-
-		/* the ray is getting too far */
-		if (t > Constants::SUPREMUM_TOLL)	{ return Constants::BACKGROUND_COLOR; }
-
-		/* the ray is close enough to a surface */
-		else if (t < Constants::INFIMUM_TOLL)	{ return Vector(.2f, .7f, .2f); }
-		/* march along the ray */
-
-		position += t * ray.getDirection();
 
 	}
-	/* may happen when the ray is parallel to a surface */
+	else{
 
-	return Constants::BACKGROUND_COLOR;
+		return Constants::BACKGROUND_COLOR;
+	}
 
 }
 

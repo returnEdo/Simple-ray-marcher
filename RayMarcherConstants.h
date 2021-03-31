@@ -11,9 +11,12 @@ namespace Constants{
 	const Vector 	WHITE(1.0f);
 
 	/* Marcher constants */
-	const int	ITER_MAX	= 100;
-	const float 	SUPREMUM_TOLL	= 100.0f;
-	const float	INFIMUM_TOLL	= .0001f;
+	const int	ITER_MAX	= 100;			// marching iterations 
+	const float 	SUPREMUM_TOLL	= 100.0f;		// max radius allowed
+	const float	INFIMUM_TOLL	= .0001f;		// min radius allowed
 	
 	const Vector	BACKGROUND_COLOR(.3f, .3f, .3f);
+
+	/* Collision constants */
+	const int 	RADIUS_QUEUE_SIZE	= 10;		// buffer of radius size (for ambient occlusion)
 }
