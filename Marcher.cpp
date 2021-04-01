@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <limits>
+#include <algorithm>
 #include <iostream>
 
 #include "RayMarcherConstants.h"
@@ -99,49 +100,38 @@ void Marcher::march(const Ray& ray, Collision& collision){
 
 Vector Marcher::findColor(const Ray& ray){
 	/* marches a ray and find the corresponding color */
-	/* TODO: accumulation for amb occlu */
-
-//	Vector position = ray.getOrigin();		// current position
-//	
-//	std::shared_ptr<Object> closest;
-//
-//	for (int i = 0; i < Constants::ITER_MAX; i++){	
-//
-//		/* find the closest Object */
-//		float t = std::numeric_limits<float>::max();
-//		for (auto pobject: scene.objects){
-//
-//			if (pobject -> sdf(position) < t){
-//				
-//				closest = pobject;
-//				t = pobject -> sdf(position);
-//			}
-//
-//		}
-//
-//		/* the ray is getting too far */
-//		if (t > Constants::SUPREMUM_TOLL)	{ return Constants::BACKGROUND_COLOR; }
-//
-//		/* the ray is close enough to a surface */
-//		else if (t < Constants::INFIMUM_TOLL)	{ return Vector(.2f, .7f, .2f); }
-//		/* march along the ray */
-//
-//		position += t * ray.getDirection();
-//
-//	}
-//	/* may happen when the ray is parallel to a surface */
-//
-//	return Constants::BACKGROUND_COLOR;
-
 	
 	Collision collision;
 	
 	march(ray, collision);
 
 	if (collision.hasCollided){
-		
-		return Vector(.2, .7, .2);
+		/* basic shading and shadowing */
 
+		float intensity = .0f;
+
+		Vector normal;
+		collision.collidedObject -> getNormalAt(collision.position, normal);
+
+		for (auto plight: scene.lights){
+
+			Vector lightVector = plight -> getPosition() - collision.position;	
+			lightVector.normalize();
+			
+			/* shadowing */
+			Ray feeler(collision.position + lightVector * Constants::OFFSET_DISTANCE, lightVector);
+
+			Collision feelerCollision;
+			march(feeler, feelerCollision);
+	
+			if (not feelerCollision.hasCollided){
+				
+				intensity += std::max(.0f, lightVector * normal);
+			}
+		}
+
+		return (collision.collidedObject -> getColor()) *
+			(Constants::AMBIENT_INTENSITY + (1.0f - Constants::AMBIENT_INTENSITY) * intensity);
 
 	}
 	else{
@@ -150,21 +140,6 @@ Vector Marcher::findColor(const Ray& ray){
 	}
 
 }
-
-//
-//Vector Marcher::findColor(const Vector& position, const Vector& direction, std::shared_ptr<Object>& pobject){
-//
-//
-//	Vector normal;
-//	pobject -> getNormalAt(position, normal);
-//
-//	Vector color = pobject -> getColor();
-//
-//	float 
-//
-//}
-
-
 
 
 

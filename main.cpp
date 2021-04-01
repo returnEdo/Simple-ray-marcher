@@ -16,14 +16,17 @@ int main(){
 
 	std::string addr = "renderings/march.jpg";
 
-	int width	= 1000; 
+	int width	= 400; 
 	int height	= width;
 
 	std::vector<std::shared_ptr<Object>> pobjects;
 	pobjects.push_back(std::shared_ptr<Sphere>(new Sphere(Vector(), 1.0f)));
+	pobjects.push_back(std::shared_ptr<Sphere>(new Sphere(Vector(1.0f, -2.0f, -2.0f), 1.0f)));
 
-	std::vector<Light> lights;
-	lights.push_back({Vector()});
+	pobjects[0] -> setColor(Vector(.2f, .7f, .2f));
+
+	std::vector<std::shared_ptr<Light>> lights;
+	lights.push_back(std::shared_ptr<Light>(new Light(Vector(10.0f))));
 	
 	Scene scene;
 	scene.objects = pobjects;

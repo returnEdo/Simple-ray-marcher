@@ -12,7 +12,7 @@ class Scene{
 	public:
 
 	std::vector<std::shared_ptr<Object>>	objects;
-	std::vector<Light>			lights;
+	std::vector<std::shared_ptr<Light>>	lights;
 	
 };
 	
