@@ -134,6 +134,13 @@ float norm(Vector& a){
 	return a.norm();
 }
 
+Vector abs(const Vector& a){
+	
+	return Vector(a.x >= .0f? a.x: -a.x,
+		      a.y >= .0f? a.y: -a.y,
+		      a.z >= .0f? a.z: -a.z);
+}
+
 void Vector::normalize(void){
 	
 	*this /= this -> norm();

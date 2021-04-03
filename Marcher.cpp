@@ -119,7 +119,7 @@ Vector Marcher::findColor(const Ray& ray){
 			lightVector.normalize();
 			
 			/* shadowing */
-			Ray feeler(collision.position + lightVector * Constants::OFFSET_DISTANCE, lightVector);
+			Ray feeler(collision.position + normal * Constants::OFFSET_DISTANCE, lightVector);
 
 			Collision feelerCollision;
 			march(feeler, feelerCollision);

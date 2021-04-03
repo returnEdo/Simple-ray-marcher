@@ -49,6 +49,8 @@ class Vector{
 	float norm(void) const;
 	friend float norm(Vector& a);
 	friend float norm2(const Vector& a);
+
+	friend Vector abs(const Vector& a);
 	
 	void normalize(void);
 	friend Vector normalize(Vector& a);
