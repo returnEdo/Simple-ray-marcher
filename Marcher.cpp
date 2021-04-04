@@ -5,8 +5,9 @@
 #include <algorithm>
 #include <iostream>
 
-#include "RayMarcherConstants.h"
 #include "MathMisc.h"
+
+
 
 Marcher::Marcher(Scene& scene_, int width_, int height_):
 		scene(scene_),
@@ -30,17 +31,31 @@ void Marcher::render(const Camera& camera, std::vector<Vector>& colors){
 
 		for (int i = 0; i < width; i++){
 
-			/* ray direction */
-			Vector d(-deltax / 2.0f + step * i,
-				 deltay / 2.0f - step * j,
-				 -camera.getPlaneDistance());
+			Vector color;
+			
+			/* antialiasing loop */
+			for (int k = 0; k < antiAliasingSamples; k++){
+				
+				float dx = randf(-step / 2.0f, step / 2.0f);
+				float dy = randf(-step / 2.0f, step / 2.0f);
 
-			d.normalize();
-			d = camera.getCamToWorld() * d;
+				/* ray direction */
+				Vector d(-deltax / 2.0f + step * i + dx,
+					 deltay / 2.0f - step * j + dy,
+					 -camera.getPlaneDistance());
 
-			Ray ray(camera.getPosition(), d);
+				d.normalize();
+				d = camera.getCamToWorld() * d;
 
-			colors.push_back(clamp(255.0f * findColor(ray), Vector(.0f), Vector(255.0f)));
+				Ray ray(camera.getPosition(), d);
+
+				color += clamp(255.0f * findColor(ray), Vector(.0f), Vector(255.0f));
+
+			}
+
+			color /= static_cast<float>(antiAliasingSamples);
+
+			colors.push_back(color);
 		}
 	}
 }

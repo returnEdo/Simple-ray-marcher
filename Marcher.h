@@ -10,12 +10,14 @@
 #include "Camera.h"
 #include "Vector.h"
 #include "Ray.h"
-
+#include "RayMarcherConstants.h"
 
 
 class Marcher{
 
 	private:
+
+	int antiAliasingSamples = Constants::ANTI_ALIASING_SAMPLES;
 
 	int width;
 	int height;
@@ -28,6 +30,9 @@ class Marcher{
 	public:
 
 	Marcher(Scene& scene_, int width_, int height_);
+
+	/* setters */
+	inline void setAntiAliasingSamples(int samp)	{ antiAliasingSamples = samp; }
 
 	void render(const Camera& camera, std::vector<Vector>& colors);
 };

@@ -12,6 +12,7 @@ namespace Constants{
 
 	/* Marcher constants */
 	const int	ITER_MAX		= 1000;			// marching iterations 
+	const int	ANTI_ALIASING_SAMPLES	= 3;
 	const float 	SUPREMUM_TOLL		= 100.0f;		// max radius allowed
 	const float	INFIMUM_TOLL		= .00001f;		// min radius allowed
 	const float	OFFSET_DISTANCE 	= .00001f;		// offset fromsurfaces
