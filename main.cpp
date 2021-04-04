@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "Vector.h"
+#include "Vector2.h"
 #include "Matrix.h"
 #include "Geometry.h"
 #include "Scene.h"
@@ -26,7 +27,7 @@ int main(int n, char ** val){
 	std::string addr = "renderings/march.jpg";
 	std::vector<std::shared_ptr<Object>> pobjects;
 	
-	pobjects.push_back(std::shared_ptr<Torus>(new Torus(3.0f, 1.0f, Vector(), Matrix(Vector(1.0f, .0f, .0f), .0f))));
+	pobjects.push_back(std::shared_ptr<Object>(new Torus(3.0f, 1.0f, Vector(), Matrix(Vector(1.0f, .0f, .0f), .0f))));
 
 //	pobjects[0] -> setColor(Vector(.3f, .7f, .3f));
 
@@ -43,7 +44,7 @@ int main(int n, char ** val){
 	std::vector<Vector> colors;
 	Marcher marcher(scene, width, height);
 
-	marcher.setAntiAliasingSamples(5);
+	marcher.setAntiAliasingSamples(1);
 	marcher.setProjection(Projection::ORTHOGRAPHIC);
 
 	marcher.render(camera, colors);
