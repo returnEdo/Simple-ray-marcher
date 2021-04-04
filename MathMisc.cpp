@@ -33,3 +33,6 @@ float randf(float a, float b){
 	return ((static_cast<float>(rand()) / MAXF) * (b - a) + a); 
 
 }
+
+
+float pow2(float a)	{ return a*a; }

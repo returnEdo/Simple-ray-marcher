@@ -8,3 +8,5 @@ float clamp(float val, float lower, float upper);
 Vector clamp(Vector val, const Vector& lower, const Vector& upper);
 
 float randf(float a, float b);
+
+float pow2(float a);
