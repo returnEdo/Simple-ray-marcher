@@ -13,9 +13,18 @@
 #include "RayMarcherConstants.h"
 
 
+enum class Projection{
+
+	PERSPECTIVE,
+	ORTHOGRAPHIC
+};
+
+
 class Marcher{
 
 	private:
+
+	Projection projection	= Projection::PERSPECTIVE;
 
 	int antiAliasingSamples = Constants::ANTI_ALIASING_SAMPLES;
 
@@ -32,7 +41,8 @@ class Marcher{
 	Marcher(Scene& scene_, int width_, int height_);
 
 	/* setters */
-	inline void setAntiAliasingSamples(int samp)	{ antiAliasingSamples = samp; }
+	inline void setAntiAliasingSamples(int samp)			{ antiAliasingSamples = samp; }
+	inline void setProjection(const Projection& probjection_)	{ projection = probjection_; }
 
 	void render(const Camera& camera, std::vector<Vector>& colors);
 };

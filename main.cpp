@@ -85,7 +85,8 @@ int main(int n, char ** val){
 	std::vector<Vector> colors;
 	Marcher marcher(scene, width, height);
 
-	marcher.setAntiAliasingSamples(1);
+	marcher.setAntiAliasingSamples(5);
+//	marcher.setProjection(Projection::ORTHOGRAPHIC);
 
 	marcher.render(camera, colors);
 

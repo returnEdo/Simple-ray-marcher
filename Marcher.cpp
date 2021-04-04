@@ -26,6 +26,9 @@ void Marcher::render(const Camera& camera, std::vector<Vector>& colors){
 
 	float step = deltax / static_cast<float>(width - 1);
 
+	Vector origin;
+	Vector direction;
+
 	/* rays are casted from top left */
 	for (int j = 0; j < height; j++){
 
@@ -40,14 +43,29 @@ void Marcher::render(const Camera& camera, std::vector<Vector>& colors){
 				float dy = randf(-step / 2.0f, step / 2.0f);
 
 				/* ray direction */
-				Vector d(-deltax / 2.0f + step * i + dx,
-					 deltay / 2.0f - step * j + dy,
-					 -camera.getPlaneDistance());
+				if (projection == Projection::PERSPECTIVE){
 
-				d.normalize();
-				d = camera.getCamToWorld() * d;
+					direction =  Vector(-deltax / 2.0f + step * i + dx,
+							    deltay / 2.0f - step * j + dy,
+							    -camera.getPlaneDistance());
+					direction.normalize();
 
-				Ray ray(camera.getPosition(), d);
+					origin = camera.getPosition();
+				}
+				else {
+					/* ORTHOGRAPHIC projection */
+
+					direction = Vector(.0f, .0f, -1.0f);
+
+					origin = Vector(-deltax / 2.0f + step * i + dx,
+							deltay / 2.0f - step * j + dy,
+							.0f);
+					origin = camera.getPosition() + camera.getCamToWorld() * origin;
+				}
+
+				direction = camera.getCamToWorld() * direction;
+
+				Ray ray(origin, direction);
 
 				color += clamp(255.0f * findColor(ray), Vector(.0f), Vector(255.0f));
 
