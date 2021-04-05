@@ -27,24 +27,25 @@ int main(int n, char ** val){
 	std::string addr = "renderings/march.jpg";
 	std::vector<std::shared_ptr<Object>> pobjects;
 	
-	pobjects.push_back(std::shared_ptr<Object>(new Torus(3.0f, 1.0f, Vector(), Matrix(Vector(1.0f, .0f, .0f), .0f))));
+	pobjects.push_back(std::shared_ptr<Object>(new Box(Vector(10.0f, .1f, 10.0f), Vector(.0f, -0.1f, .0f), Matrix(Vector(1.0f, .0f, .0f), .0f))));
+	pobjects.push_back(std::shared_ptr<Object>(new Box(Vector(1.0f), Vector(.0f, .5f, .0f), Matrix(Vector(1.0f, .0f, .0f), .0f))));
 
 //	pobjects[0] -> setColor(Vector(.3f, .7f, .3f));
 
 	std::vector<std::shared_ptr<Light>> lights;
-	lights.push_back(std::shared_ptr<Light>(new Light(Vector(10.0f))));
+	lights.push_back(std::shared_ptr<Light>(new Light(Vector(10.0f, 10.0f, -10.0f))));
 	
 	Scene scene;
 	scene.objects = pobjects;
 	scene.lights = lights;
 
-	Camera camera(Vector(5.0f), Vector());
-	camera.setFOV(M_PI / 1.4f);
+	Camera camera(Vector(2.1f), Vector());
+//	camera.setFOV(M_PI / 1.4f);
 
 	std::vector<Vector> colors;
 	Marcher marcher(scene, width, height);
 
-	marcher.setAntiAliasingSamples(1);
+	marcher.setAntiAliasingSamples(8);
 	marcher.setProjection(Projection::ORTHOGRAPHIC);
 
 	marcher.render(camera, colors);

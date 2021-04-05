@@ -131,6 +131,26 @@ void Marcher::march(const Ray& ray, Collision& collision){
 }
 
 
+float Marcher::findAmbientOcclusion(const Vector& collisionPosition, const Vector& normal) const{
+	/* we sample the normal and determine which Object is closer */
+
+	Vector currentPoint = collisionPosition;
+
+	float sum;
+	float t;
+
+	for (int i = 0; i < Constants::AMBIENT_OCCLUSION_SAMPLES; i++){
+
+		currentPoint += normal * Constants::AMBIENT_OCCLUSION_STEP;
+
+		t = this -> sdf(currentPoint);
+		sum += t / ((i + 1) * Constants::AMBIENT_OCCLUSION_STEP);
+
+	}
+	
+	return sum / static_cast<float>(Constants::AMBIENT_OCCLUSION_SAMPLES);
+}
+
 Vector Marcher::findColor(const Ray& ray){
 	/* marches a ray and find the corresponding color */
 	
@@ -163,8 +183,12 @@ Vector Marcher::findColor(const Ray& ray){
 			}
 		}
 
-		return (collision.collidedObject -> getColor()) *
-			(Constants::AMBIENT_INTENSITY + (1.0f - Constants::AMBIENT_INTENSITY) * intensity);
+		float ambientOcclusion = findAmbientOcclusion(collision.position, normal);
+
+		return (collision.collidedObject -> getColor()) * 
+		       (Constants::AMBIENT_INTENSITY + 
+		        Constants::AMBIENT_OCCLUSION_INTENSITY * pow(ambientOcclusion, Constants::AMBIENT_OCCLUSION_EXPONENT) + 
+			(1.0f - Constants::AMBIENT_INTENSITY - Constants::AMBIENT_OCCLUSION_INTENSITY) * intensity);
 
 	}
 	else{
@@ -174,6 +198,22 @@ Vector Marcher::findColor(const Ray& ray){
 
 }
 
+
+
+float Marcher::sdf(const Vector& x) const{
+	/* sign distance field of the scene */
+
+	float t = std::numeric_limits<float>::max();
+
+	for (const std::shared_ptr<Object>& pobject: scene.objects){
+		
+		float ttemp = pobject -> sdf(x);
+
+		t = (t < ttemp? t: ttemp);
+
+	}
+	return t;
+}
 
 
 

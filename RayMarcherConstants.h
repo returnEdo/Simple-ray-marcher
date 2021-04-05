@@ -20,6 +20,11 @@ namespace Constants{
 	
 	const Vector	BACKGROUND_COLOR(.3f, .3f, .3f);
 
+	const int	AMBIENT_OCCLUSION_SAMPLES 	= 50;		// samples necessary for AO index
+	const float	AMBIENT_OCCLUSION_STEP		= .01f;		// step size along normal @ collisionPosition
+	const float	AMBIENT_OCCLUSION_EXPONENT	= .7f;		// step size along normal @ collisionPosition
+	const float	AMBIENT_OCCLUSION_INTENSITY	= .08f;	
+
 	/* Collision constants */
 	const int 	RADIUS_QUEUE_SIZE	= 10;			// buffer of radius size (for ambient occlusion)
 }

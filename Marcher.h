@@ -36,6 +36,9 @@ class Marcher{
 	void march(const Ray& ray, Collision& collision);
 	Vector findColor(const Ray& ray);
 
+	float findAmbientOcclusion(const Vector& collisionPosition,
+				   const Vector& collisionNormal) const;
+
 	public:
 
 	Marcher(Scene& scene_, int width_, int height_);
@@ -45,4 +48,6 @@ class Marcher{
 	inline void setProjection(const Projection& probjection_)	{ projection = probjection_; }
 
 	void render(const Camera& camera, std::vector<Vector>& colors);
+
+	float sdf(const Vector& x) const;
 };
